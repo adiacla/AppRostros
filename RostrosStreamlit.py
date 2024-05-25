@@ -342,10 +342,10 @@ def mostrar_bboxes_cv2(imagen: Union[PIL.Image.Image, np.ndarray],
         return imagen
     else:
         # Convertir la imagen de BGR a RGB
-        frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
+        #frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
 
         # Convertir la imagen a formato PIL
-        img_pil = Image.fromarray(frame_rgb)
+        img_pil = Image.fromarray(imagen)
 
     return img_pil
         
@@ -423,10 +423,10 @@ def mostrar_bboxes(imagen: Union[PIL.Image.Image, np.ndarray],
         return imagen
     else:
         # Convertir la imagen de BGR a RGB
-        frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
+        #frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
 
         # Convertir la imagen a formato PIL
-        img_pil = Image.fromarray(frame_rgb)
+        img_pil = Image.fromarray(imagen)
 
     return img_pil
                 
@@ -602,6 +602,7 @@ def pipeline_deteccion_imagen(imagen: Union[PIL.Image.Image, np.ndarray],
             identidades = identidades,
             ax          = ax
             )
+        
     return imagen ,identidades
     
 
@@ -712,7 +713,8 @@ with tab1:
         if imagen is None:
             st.write("No se ha cargado ni tomado ninguna foto.")
         else:
-            st.image(imagen, caption='La Foto Tomada tiene las siguientes personas')
+            imagen_rgb = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+            st.image(imagen_rgb, caption='La Foto Tomada tiene las siguientes personas')
             st.write("Las personas en la reunión son: ",identidades)
 
 with tab2:
