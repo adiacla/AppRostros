@@ -618,10 +618,10 @@ def pipeline_deteccion_webcam(frame,dic_referencia, output_device='window', dete
 
 
     #image = Image.open(frame)
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     bboxes = detectar_caras(
-                    imagen         = frame_rgb,
+                    imagen         = frame,
                     detector       = detector,
                     keep_all       = keep_all,
                     min_face_size  = min_face_size,
@@ -638,7 +638,7 @@ def pipeline_deteccion_webcam(frame,dic_referencia, output_device='window', dete
         return None
     
     caras = extraer_caras(
-                imagen = frame_rgb,
+                imagen = frame,
                 bboxes = bboxes
             )
     
@@ -654,7 +654,7 @@ def pipeline_deteccion_webcam(frame,dic_referencia, output_device='window', dete
                 )
 
     frame_procesado = mostrar_bboxes_cv2(
-                        imagen      = frame_rgb,
+                        imagen      = frame,
                         bboxes      = bboxes,
                         identidades = identidades,
                         device = output_device
@@ -712,6 +712,7 @@ with tab1:
         if imagen is None:
             st.write("No se ha cargado ni tomado ninguna foto.")
         else:
+            
             st.image(imagen, caption='La Foto Tomada tiene las siguientes personas')
             st.write("Las personas en la reunión son: ",identidades)
 
