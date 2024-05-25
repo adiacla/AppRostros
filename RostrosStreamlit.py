@@ -712,7 +712,7 @@ with tab1:
         if imagen is None:
             st.write("No se ha cargado ni tomado ninguna foto.")
         else:
-            imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+            imagen = cv2.cvtColor(imagen_rgb, cv2.COLOR_RGB2BGR)
             st.image(imagen, caption='La Foto Tomada tiene las siguientes personas')
             st.write("Las personas en la reunión son: ",identidades)
 
