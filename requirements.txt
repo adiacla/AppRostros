@@ -1,0 +1,11 @@
+scipy
+facenet-pytorch
+opencv-python
+matplotlib
+pillow
+warn
+typing
+logging-utilities
+lib-platform
+glob2
+urllib3
