@@ -19,10 +19,12 @@ pip install logging-utilities
 pip install lib-platform
 pip install glob2
 pip install urllib3
+pip install streamlit_webrtc
 # pip install tqdm (ya instalado)
 """
 # Librerías
 # ==============================================================================
+import PIL.Image
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -43,9 +45,8 @@ from urllib.request import urlretrieve
 from tqdm import tqdm 
 from scipy.spatial.distance import euclidean
 from scipy.spatial.distance import cosine
-
+from PIL import Image
 import streamlit as st
-
 
 
 ################################################################################
@@ -612,16 +613,11 @@ def pipeline_deteccion_imagen(imagen: Union[PIL.Image.Image, np.ndarray],
 ################################################################################
 
 
-def pipeline_deteccion_webcam(dic_referencia, output_device='window', detector=None, keep_all=True, min_face_size=40, thresholds=[0.6, 0.7, 0.7], device=None, min_confidence=0.5, fix_bbox=True, output_img_size=[160, 160], encoder=None, threshold_similaridad=0.5, ax=None, verbose=False):
+def pipeline_deteccion_webcam(frame,dic_referencia, output_device='window', detector=None, keep_all=True, min_face_size=40, thresholds=[0.6, 0.7, 0.7], device=None, min_confidence=0.5, fix_bbox=True, output_img_size=[160, 160], encoder=None, threshold_similaridad=0.5, ax=None, verbose=False):
     # Función para capturar una sola foto desde la webcam y procesarla
-    
-    capture = cv2.VideoCapture(0)
-    frame_exist, frame = capture.read()
 
-    if not frame_exist:
-        capture.release()
-        return None
 
+    #image = Image.open(frame)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     bboxes = detectar_caras(
@@ -637,8 +633,7 @@ def pipeline_deteccion_webcam(dic_referencia, output_device='window', detector=N
 
     if len(bboxes) == 0:
         logging.info('No se han detectado caras en la imagen. paso detectar')
-         # Convertir la imagen de BGR a RGB
-        capture.release()  
+        # Convertir la imagen de BGR a RGB
         print('no hat boxes')          
         return None
     
@@ -653,19 +648,17 @@ def pipeline_deteccion_webcam(dic_referencia, output_device='window', detector=N
                 )
 
     identidades = identificar_caras(
-                     embeddings     = embeddings,
-                     dic_referencia = dic_referencia,
-                     threshold_similaridad = threshold_similaridad
-                  )
+                    embeddings     = embeddings,
+                    dic_referencia = dic_referencia,
+                    threshold_similaridad = threshold_similaridad
+                )
 
     frame_procesado = mostrar_bboxes_cv2(
                         imagen      = frame_rgb,
                         bboxes      = bboxes,
                         identidades = identidades,
                         device = output_device
-                     )
-
-    capture.release()
+                    )
 
     return frame_procesado ,identidades
 
@@ -707,8 +700,15 @@ tab1, tab2 = st.tabs(["Tomar Foto", "Cargar Foto"])
 
 with tab1:
     st.subheader("Tomar Foto con la Cámara")
-    if st.button("Tomar Foto"):
-        imagen,identidades=pipeline_deteccion_webcam(dic_referencias, 0.4)
+    frame = st.camera_input("Tome una foto") 
+    if frame is None:
+        st.text("Por favor tome una foto")   
+    else:
+        imagen_pil = PIL.Image.open(frame)
+        #Convertir la imagen PIL a un array numpy
+        imagen_np = np.array(imagen_pil)
+        
+        imagen,identidades=pipeline_deteccion_webcam(imagen_np ,dic_referencias, 0.4)
         if imagen is None:
             st.write("No se ha cargado ni tomado ninguna foto.")
         else:
@@ -722,7 +722,7 @@ with tab2:
     
 if uploaded_file is not None:
     # Convertir el archivo cargado a un objeto de imagen PIL
-    imagen_pil = Image.open(uploaded_file)
+    imagen_pil = PIL.Image.open(uploaded_file)
     
     # Convertir la imagen PIL a un array numpy
     imagen_np = np.array(imagen_pil)
