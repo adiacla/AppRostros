@@ -1,11 +1,11 @@
 scipy
-facenet-pytorch
+facenet-pytorch==2.6.0
 opencv-python
 matplotlib
-pillow
 warn
 typing
 logging-utilities
 lib-platform
 glob2
 urllib3
+streamlit
