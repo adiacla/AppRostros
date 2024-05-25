@@ -342,10 +342,10 @@ def mostrar_bboxes_cv2(imagen: Union[PIL.Image.Image, np.ndarray],
         return imagen
     else:
         # Convertir la imagen de BGR a RGB
-        #frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
+        frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
 
         # Convertir la imagen a formato PIL
-        img_pil = Image.fromarray(imagen)
+        img_pil = Image.fromarray(frame_rgb)
 
     return img_pil
         
@@ -423,10 +423,10 @@ def mostrar_bboxes(imagen: Union[PIL.Image.Image, np.ndarray],
         return imagen
     else:
         # Convertir la imagen de BGR a RGB
-        #frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
+        frame_rgb = cv2.cvtColor(imagen, cv2.COLOR_RGB2BGR)
 
         # Convertir la imagen a formato PIL
-        img_pil = Image.fromarray(imagen)
+        img_pil = Image.fromarray(frame_rgb)
 
     return img_pil
                 
@@ -712,7 +712,6 @@ with tab1:
         if imagen is None:
             st.write("No se ha cargado ni tomado ninguna foto.")
         else:
-            imagen = cv2.cvtColor(imagen_rgb, cv2.COLOR_RGB2BGR)
             st.image(imagen, caption='La Foto Tomada tiene las siguientes personas')
             st.write("Las personas en la reunión son: ",identidades)
 
