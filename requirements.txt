@@ -1,5 +1,4 @@
 numpy
-streamlit_webrtc
 opencv-python-headless
 scipy
 torch
